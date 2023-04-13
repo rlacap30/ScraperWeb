@@ -72,6 +72,7 @@
               <thead>
                 <tr>
                   <th> Name </th>
+                  <th> Date </th>
                   <th> Ad Site </th>
                   <th> Link </th>
                   <th></th>
@@ -100,18 +101,19 @@
                 }
                 
                 if(!isset($_GET["filter"])) {
-                    $sql = "SELECT * FROM Advertisements GROUP BY Name LIMIT $initial_page, $limit";
+                    $sql = "SELECT * FROM Advertisements WHERE Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
                 }
                 
                 if(isset($_GET["filter"])) {
                     $filter = $_GET["filter"];
-                    $sql = "SELECT * FROM Advertisements WHERE Name LIKE '%$filter%' GROUP BY Name LIMIT $initial_page, $limit";
+                    $sql = "SELECT * FROM Advertisements WHERE Name LIKE '%$filter%' AND Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
                 }
 
                 $rows = mysqli_query($conn, $sql);
                 while ($row = mysqli_fetch_assoc($rows)) {
                     echo "<tr>";
                     echo "<td>" . $row["Name"] . "</td>";
+                    echo "<td>" . $row["CreatedDate"] . "</td>";
                     echo "<td class='primary'><a target='_blank' href='" .
                         $row["Site"] .
                         "'>Advertisement Link</a></td>";

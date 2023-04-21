@@ -10,6 +10,12 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
 </head>
 <body>
+  <?php
+    session_start();
+    if (isset($_SESSION["username"])) {
+        header("Location: advertisements.php");
+    }
+  ?>
   <div class="center">
     <h2>Login</h2>
     <form method="post" action = "login.php">

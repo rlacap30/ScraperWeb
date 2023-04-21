@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Advertisements</title>
   
-  <link rel="preload" href="mystyleh.css" as="style" />
+  <link rel="preload" href="adsg.css" as="style" />
   <link rel="preload" href="indexadss.js" as="script" />  
-  <link rel = "stylesheet" type="text/css" href = "mystyleh.css">
+  <link rel = "stylesheet" type="text/css" href = "adsg.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
 </head>
 <body>
     <?php
     session_start();
     if (!isset($_SESSION["username"])) {
-        header("Location: login.php");
+        #header("Location: login.php");
     }
     ?>
     <div class="container">
@@ -30,10 +30,23 @@
                 </div>
             </div>
             <div class="sidebar">
-                <a href="advertisements.php" class="active">
-                    <span class="material-icons-sharp">grid_view</span>
-                    <h3>Dashboard</h3>
-                </a>
+                <div class="dropdown">
+                    <a href="advertisements.php" class="dropdown-anchor active">
+                        <span class="material-icons-sharp">grid_view</span>
+                        <h3 style="display:inline-flex">
+                          Dashboards 
+                          <span class="material-icons-sharp">keyboard_arrow_down</span>
+                        </h3>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="germany.php"> Germany </a>
+                        <a href="switzerland.php"> Switzerland </a>
+                        <a href="sweden.php"> Sweden </a>
+                        <a href="poland.php"> Poland </a>
+                        <a href="uk.php"> UK </a>
+                        <a href="#" style="display:none">  </a>
+                    </div>
+                </div>
                 <a href="execute.php">
                     <span class="material-icons-sharp">receipt_long</span>
                     <h3>Sources</h3>
@@ -53,20 +66,137 @@
           <div class="websites">
             <h2>Advertisements</h2>
             <?php
-                if (!isset($_GET["filter"])) {
-                    echo "<div class='filter'>";
-                    echo '<input type="text" id="myInput" placeholder="Advertisement Name">';
-                    echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
-                    echo "</div>";
-                }
-                
-                if (isset($_GET["filter"])) {
-                    $value = $_GET["filter"];
-                    echo "<div class='filter'>";
-                    echo "<input type='text' value='$value' id='myInput' placeholder='Advertisement Name'>";
-                    echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
-                    echo "</div>";
-                }
+            if (
+                !isset($_GET["filter"]) &&
+                !isset($_GET["dateFromFilter"]) &&
+                !isset($_GET["dateToFilter"])
+            ) {
+                echo "<div class='filter'>";
+                echo '<input type="text" id="myInput" placeholder="Advertisement Name">';
+                echo '<label for="myDateInput">From</label>';
+                echo '<input type="date" id="myDateInput">';
+                echo '<label for="myDateInputTo">To</label>';
+                echo '<input type="date" id="myDateInputTo">';
+                echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
+                echo "</div>";
+            }
+
+            if (
+                isset($_GET["filter"]) &&
+                !isset($_GET["dateFromFilter"]) &&
+                !isset($_GET["dateToFilter"])
+            ) {
+                $value = $_GET["filter"];
+                echo "<div class='filter'>";
+                echo "<input type='text' value='$value' id='myInput' placeholder='Advertisement Name'>";
+                echo '<label for="myDateInput">From</label>';
+                echo '<input type="date" id="myDateInput">';
+                echo '<label for="myDateInputTo">To</label>';
+                echo '<input type="date" id="myDateInputTo">';
+                echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
+                echo "</div>";
+            }
+
+            if (
+                !isset($_GET["filter"]) &&
+                isset($_GET["dateFromFilter"]) &&
+                isset($_GET["dateToFilter"])
+            ) {
+                $dateTo = $_GET["dateToFilter"];
+                $dateFrom = $_GET["dateFromFilter"];
+                echo "<div class='filter'>";
+                echo '<input type="text" id="myInput" placeholder="Advertisement Name">';
+                echo '<label for="myDateInput">From</label>';
+                echo "<input type='date' id='myDateInput' value='$dateFrom'>";
+                echo '<label for="myDateInputTo">To</label>';
+                echo "<input type='date' id='myDateInputTo' value='$dateTo'>";
+                echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
+                echo "</div>";
+            }
+
+            if (
+                !isset($_GET["filter"]) &&
+                !isset($_GET["dateFromFilter"]) &&
+                isset($_GET["dateToFilter"])
+            ) {
+                $dateTo = $_GET["dateToFilter"];
+                echo "<div class='filter'>";
+                echo '<input type="text" id="myInput" placeholder="Advertisement Name">';
+                echo '<label for="myDateInput">From</label>';
+                echo '<input type="date" id="myDateInput">';
+                echo '<label for="myDateInputTo">To</label>';
+                echo "<input type='date' id='myDateInputTo' value='$dateTo'>";
+                echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
+                echo "</div>";
+            }
+
+            if (
+                !isset($_GET["filter"]) &&
+                isset($_GET["dateFromFilter"]) &&
+                !isset($_GET["dateToFilter"])
+            ) {
+                $dateFrom = $_GET["dateFromFilter"];
+                echo "<div class='filter'>";
+                echo '<input type="text" id="myInput" placeholder="Advertisement Name">';
+                echo '<label for="myDateInput">From</label>';
+                echo "<input type='date' id='myDateInput' value='$dateFrom'>";
+                echo '<label for="myDateInputTo">To</label>';
+                echo '<input type="date" id="myDateInputTo">';
+                echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
+                echo "</div>";
+            }
+
+            if (
+                isset($_GET["filter"]) &&
+                !isset($_GET["dateFromFilter"]) &&
+                isset($_GET["dateToFilter"])
+            ) {
+                $value = $_GET["filter"];
+                $dateTo = $_GET["dateToFilter"];
+                echo "<div class='filter'>";
+                echo "<input type='text' id='myInput' placeholder='Advertisement Name' value='$value'>";
+                echo '<label for="myDateInput">From</label>';
+                echo '<input type="date" id="myDateInput">';
+                echo '<label for="myDateInputTo">To</label>';
+                echo "<input type='date' id='myDateInputTo' value='$dateTo'>";
+                echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
+                echo "</div>";
+            }
+
+            if (
+                isset($_GET["filter"]) &&
+                isset($_GET["dateFromFilter"]) &&
+                !isset($_GET["dateToFilter"])
+            ) {
+                $value = $_GET["filter"];
+                $dateFrom = $_GET["dateFromFilter"];
+                echo "<div class='filter'>";
+                echo "<input type='text' id='myInput' placeholder='Advertisement Name' value='$value'>";
+                echo '<label for="myDateInput">From</label>';
+                echo "<input type='date' id='myDateInput' value='$dateFrom'>";
+                echo '<label for="myDateInputTo">To</label>';
+                echo '<input type="date" id="myDateInputTo">';
+                echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
+                echo "</div>";
+            }
+
+            if (
+                isset($_GET["filter"]) &&
+                isset($_GET["dateFromFilter"]) &&
+                isset($_GET["dateToFilter"])
+            ) {
+                $value = $_GET["filter"];
+                $dateFrom = $_GET["dateFromFilter"];
+                $dateTo = $_GET["dateToFilter"];
+                echo "<div class='filter'>";
+                echo "<input type='text' id='myInput' placeholder='Advertisement Name' value='$value'>";
+                echo '<label for="myDateInput">From</label>';
+                echo "<input type='date' id='myDateInput' value='$dateFrom'>";
+                echo '<label for="myDateInputTo">To</label>';
+                echo "<input type='date' id='myDateInputTo' value='$dateTo'>";
+                echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
+                echo "</div>";
+            }
             ?>
             <table id="myTable">
               <thead>
@@ -99,14 +229,123 @@
                 if (!$conn) {
                     die("Connection failed: " . mysqli_connect_error());
                 }
-                
-                if(!isset($_GET["filter"])) {
-                    $sql = "SELECT * FROM Advertisements WHERE Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
+
+                if (
+                    !isset($_GET["filter"]) &&
+                    !isset($_GET["dateFromFilter"]) &&
+                    !isset($_GET["dateToFilter"])
+                ) {
+                    $sql = "SELECT * FROM Advertisements WHERE
+                    WebsiteId IN 
+                            (SELECT WebsiteId FROM Parameters
+                                    WHERE buffer_two='international') and
+                    Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) 
+                    ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
                 }
-                
-                if(isset($_GET["filter"])) {
+
+                if (
+                    isset($_GET["filter"]) &&
+                    !isset($_GET["dateFromFilter"]) &&
+                    !isset($_GET["dateToFilter"])
+                ) {
                     $filter = $_GET["filter"];
-                    $sql = "SELECT * FROM Advertisements WHERE Name LIKE '%$filter%' AND Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
+                    $sql = "SELECT * FROM Advertisements WHERE 
+                    WebsiteId IN 
+                            (SELECT WebsiteId FROM Parameters
+                                    WHERE buffer_two='international') and
+                    Name LIKE '%$filter%' AND Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) 
+                    ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
+                }
+
+                if (
+                    !isset($_GET["filter"]) &&
+                    isset($_GET["dateFromFilter"]) &&
+                    isset($_GET["dateToFilter"])
+                ) {
+                    $dateFromFilter = $_GET["dateFromFilter"];
+                    $dateToFilter = $_GET["dateToFilter"];
+                    $sql = "SELECT * FROM Advertisements WHERE 
+                    WebsiteId IN 
+                            (SELECT WebsiteId FROM Parameters
+                                    WHERE buffer_two='international') and
+                    CreatedDate BETWEEN '$dateFromFilter' AND '$dateToFilter' AND Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) 
+                    ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
+                }
+
+                if (
+                    !isset($_GET["filter"]) &&
+                    !isset($_GET["dateFromFilter"]) &&
+                    isset($_GET["dateToFilter"])
+                ) {
+                    $dateToFilter = $_GET["dateToFilter"];
+                    $sql = "SELECT * FROM Advertisements WHERE 
+                    WebsiteId IN 
+                            (SELECT WebsiteId FROM Parameters
+                                    WHERE buffer_two='international') and
+                    CreatedDate <= '$dateToFilter' AND Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) 
+                    ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
+                }
+
+                if (
+                    !isset($_GET["filter"]) &&
+                    isset($_GET["dateFromFilter"]) &&
+                    !isset($_GET["dateToFilter"])
+                ) {
+                    $dateFromFilter = $_GET["dateFromFilter"];
+                    $sql = "SELECT * FROM Advertisements WHERE 
+                    WebsiteId IN 
+                            (SELECT WebsiteId FROM Parameters
+                                    WHERE buffer_two='international') and
+                    CreatedDate >= '$dateFromFilter' AND Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) 
+                    ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
+                }
+
+                if (
+                    isset($_GET["filter"]) &&
+                    !isset($_GET["dateFromFilter"]) &&
+                    isset($_GET["dateToFilter"])
+                ) {
+                    $dateToFilter = $_GET["dateToFilter"];
+                    $filter = $_GET["filter"];
+                    $sql = "SELECT * FROM Advertisements WHERE 
+                    WebsiteId IN 
+                            (SELECT WebsiteId FROM Parameters
+                                    WHERE buffer_two='international') and
+                    CreatedDate <= '$dateToFilter' AND Name LIKE '%$filter%' AND Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) 
+                    ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
+                }
+
+                if (
+                    isset($_GET["filter"]) &&
+                    isset($_GET["dateFromFilter"]) &&
+                    !isset($_GET["dateToFilter"])
+                ) {
+                    $dateFromFilter = $_GET["dateFromFilter"];
+                    $filter = $_GET["filter"];
+                    $sql = "SELECT * FROM Advertisements WHERE 
+                    WebsiteId IN 
+                            (SELECT WebsiteId FROM Parameters
+                                    WHERE buffer_two='international') and
+                    CreatedDate >= '$dateFromFilter' AND Name LIKE '%$filter%' AND Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) 
+                    ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
+                }
+
+                if (
+                    isset($_GET["filter"]) &&
+                    isset($_GET["dateFromFilter"]) &&
+                    isset($_GET["dateToFilter"])
+                ) {
+                    $dateFromFilter = $_GET["dateFromFilter"];
+                    $dateToFilter = $_GET["dateToFilter"];
+                    $filter = $_GET["filter"];
+                    $sql = "SELECT * FROM Advertisements WHERE 
+                    WebsiteId IN 
+                            (SELECT WebsiteId FROM Parameters
+                                    WHERE buffer_two='international') and
+                    CreatedDate BETWEEN '$dateFromFilter' AND '$dateToFilter'
+                    AND Name LIKE '%$filter%'
+                    AND Id IN (SELECT MAX(Id) FROM Advertisements GROUP BY Name) 
+                    ORDER BY CreatedDate DESC LIMIT $initial_page, $limit";
                 }
 
                 $rows = mysqli_query($conn, $sql);
@@ -165,7 +404,9 @@
                                );
                            }
 
-                           $adnamesql = "SELECT * From Advertisements WHERE Id = $adid";
+                           $adnamesql = "SELECT * From Advertisements WHERE Id = $adid 
+                           AND WebsiteId IN (SELECT WebsiteId FROM Parameters
+                                    WHERE buffer_two='international')";
                            #echo $adnamesql;
                            $adnamerows = mysqli_query($conn, $adnamesql);
 
@@ -178,7 +419,7 @@
                                         FROM Websites
                                         LEFT JOIN Advertisements on Websites.Id = Advertisements.WebsiteId
                                         LEFT JOIN Parameters on Websites.Id = Parameters.WebsiteId
-                                        WHERE Advertisements.Name = '$adname'";
+                                        WHERE Advertisements.Name = '$adname' AND Parameters.buffer_two='international'";
                                $rows = mysqli_query($conn, $sql);
                                while ($row = mysqli_fetch_assoc($rows)) {
                                    echo "<tr>";
@@ -198,13 +439,104 @@
             </div>
             <div class="items">
                 <?php
-                if(!isset($_GET["filter"])) {
-                    $getQuery = "SELECT COUNT(DISTINCT Name) FROM Advertisements";
+                if (
+                    !isset($_GET["filter"]) &&
+                    !isset($_GET["dateFromFilter"]) &&
+                    !isset($_GET["dateToFilter"])
+                ) {
+                    $getQuery = "SELECT COUNT(DISTINCT Name) FROM Advertisements WHERE WebsiteId IN 
+                                 (SELECT WebsiteId FROM Parameters
+                                  WHERE buffer_two='international')";
                 }
-                
-                if(isset($_GET["filter"])) {
+
+                if (
+                    isset($_GET["filter"]) &&
+                    !isset($_GET["dateFromFilter"]) &&
+                    !isset($_GET["dateToFilter"])
+                ) {
                     $filter = $_GET["filter"];
-                    $getQuery = "SELECT COUNT(DISTINCT Name) FROM Advertisements WHERE Name LIKE '%$filter%'";
+                    $getQuery = "SELECT COUNT(DISTINCT Name) FROM Advertisements WHERE Name LIKE '%$filter%'
+                    AND WebsiteId IN 
+                                 (SELECT WebsiteId FROM Parameters
+                                  WHERE buffer_two='international')";
+                }
+
+                if (
+                    !isset($_GET["filter"]) &&
+                    isset($_GET["dateFromFilter"]) &&
+                    isset($_GET["dateToFilter"])
+                ) {
+                    $dateFromFilter = $_GET["dateFromFilter"];
+                    $dateToFilter = $_GET["dateToFilter"];
+                    $getQuery = "SELECT COUNT(DISTINCT Name) FROM Advertisements WHERE CreatedDate BETWEEN '$dateFromFilter' AND '$dateToFilter'
+                    AND WebsiteId IN 
+                                 (SELECT WebsiteId FROM Parameters
+                                  WHERE buffer_two='international')";
+                }
+
+                if (
+                    !isset($_GET["filter"]) &&
+                    !isset($_GET["dateFromFilter"]) &&
+                    isset($_GET["dateToFilter"])
+                ) {
+                    $dateToFilter = $_GET["dateToFilter"];
+                    $getQuery = "SELECT COUNT(DISTINCT Name) FROM Advertisements WHERE CreatedDate <= '$dateToFilter'
+                    AND WebsiteId IN 
+                                 (SELECT WebsiteId FROM Parameters
+                                  WHERE buffer_two='international')";
+                }
+
+                if (
+                    !isset($_GET["filter"]) &&
+                    isset($_GET["dateFromFilter"]) &&
+                    !isset($_GET["dateToFilter"])
+                ) {
+                    $dateFromFilter = $_GET["dateFromFilter"];
+                    $getQuery = "SELECT COUNT(DISTINCT Name) FROM Advertisements WHERE CreatedDate >= '$dateFromFilter'
+                    AND WebsiteId IN 
+                                 (SELECT WebsiteId FROM Parameters
+                                  WHERE buffer_two='international')";
+                }
+
+                if (
+                    isset($_GET["filter"]) &&
+                    !isset($_GET["dateFromFilter"]) &&
+                    isset($_GET["dateToFilter"])
+                ) {
+                    $dateToFilter = $_GET["dateToFilter"];
+                    $filter = $_GET["filter"];
+                    $getQuery = "SELECT COUNT(DISTINCT Name) FROM Advertisements WHERE CreatedDate <= '$dateToFilter' AND Name LIKE '%$filter%'
+                    AND WebsiteId IN 
+                                 (SELECT WebsiteId FROM Parameters
+                                  WHERE buffer_two='international')";
+                }
+
+                if (
+                    isset($_GET["filter"]) &&
+                    isset($_GET["dateFromFilter"]) &&
+                    !isset($_GET["dateToFilter"])
+                ) {
+                    $dateFromFilter = $_GET["dateFromFilter"];
+                    $filter = $_GET["filter"];
+                    $getQuery = "SELECT COUNT(DISTINCT Name) FROM Advertisements WHERE CreatedDate >= '$dateFromFilter' AND Name LIKE '%$filter%'
+                    AND WebsiteId IN 
+                                 (SELECT WebsiteId FROM Parameters
+                                  WHERE buffer_two='international')";
+                }
+
+                if (
+                    isset($_GET["filter"]) &&
+                    isset($_GET["dateFromFilter"]) &&
+                    isset($_GET["dateToFilter"])
+                ) {
+                    $dateFromFilter = $_GET["dateFromFilter"];
+                    $filter = $_GET["filter"];
+                    $dateToFilter = $_GET["dateToFilter"];
+                    $getQuery = "SELECT COUNT(DISTINCT Name) FROM Advertisements WHERE CreatedDate BETWEEN '$dateFromFilter' AND '$dateToFilter'
+                    AND Name LIKE '%$filter%'
+                    AND WebsiteId IN 
+                                 (SELECT WebsiteId FROM Parameters
+                                  WHERE buffer_two='international')";
                 }
 
                 $result = mysqli_query($conn, $getQuery);
@@ -214,32 +546,522 @@
                 $total_pages = ceil($total_rows / $limit);
                 $pageURL = "";
                 if ($page_number >= 2) {
-                    echo "<a href='advertisements.php?adpage=" .
-                        ($page_number - 1) .
-                        "'>  Prev </a>";
+                    if (
+                        !isset($_GET["filter"]) &&
+                        !isset($_GET["dateFromFilter"]) &&
+                        !isset($_GET["dateToFilter"])
+                    ) {
+                        echo "<a href='advertisements.php?adpage=" .
+                            ($page_number - 1) .
+                            "'>  Prev </a>";
+                    }
+
+                    if (
+                        isset($_GET["filter"]) &&
+                        !isset($_GET["dateFromFilter"]) &&
+                        !isset($_GET["dateToFilter"])
+                    ) {
+                        $filter = $_GET["filter"];
+                        echo "<a href='advertisements.php?filter=" .
+                            $filter .
+                            "&adpage=" .
+                            ($page_number - 1) .
+                            "'>  Prev </a>";
+                    }
+
+                    if (
+                        !isset($_GET["filter"]) &&
+                        isset($_GET["dateFromFilter"]) &&
+                        isset($_GET["dateToFilter"])
+                    ) {
+                        $dateFromFilter = $_GET["dateFromFilter"];
+                        $dateToFilter = $_GET["dateToFilter"];
+                        echo "<a href='advertisements.php?dateFromFilter=" .
+                            $dateFromFilter .
+                            "&dateToFilter=" .
+                            $dateToFilter .
+                            "&adpage=" .
+                            ($page_number - 1) .
+                            "'>  Prev </a>";
+                    }
+
+                    if (
+                        !isset($_GET["filter"]) &&
+                        !isset($_GET["dateFromFilter"]) &&
+                        isset($_GET["dateToFilter"])
+                    ) {
+                        $dateToFilter = $_GET["dateToFilter"];
+                        echo "<a href='advertisements.php?dateToFilter=" .
+                            $dateToFilter .
+                            "&adpage=" .
+                            ($page_number - 1) .
+                            "'>  Prev </a>";
+                    }
+
+                    if (
+                        !isset($_GET["filter"]) &&
+                        isset($_GET["dateFromFilter"]) &&
+                        !isset($_GET["dateToFilter"])
+                    ) {
+                        $dateFromFilter = $_GET["dateFromFilter"];
+                        echo "<a href='advertisements.php?dateFromFilter=" .
+                            $dateFromFilter .
+                            "&adpage=" .
+                            ($page_number - 1) .
+                            "'>  Prev </a>";
+                    }
+
+                    if (
+                        isset($_GET["filter"]) &&
+                        isset($_GET["dateFromFilter"]) &&
+                        !isset($_GET["dateToFilter"])
+                    ) {
+                        $dateFromFilter = $_GET["dateFromFilter"];
+                        $filter = $_GET["filter"];
+                        echo "<a href='advertisements.php?filter=" .
+                            $filter .
+                            "&dateFromFilter=" .
+                            $dateFromFilter .
+                            "&adpage=" .
+                            ($page_number - 1) .
+                            "'>  Prev </a>";
+                    }
+
+                    if (
+                        isset($_GET["filter"]) &&
+                        !isset($_GET["dateFromFilter"]) &&
+                        isset($_GET["dateToFilter"])
+                    ) {
+                        $dateToFilter = $_GET["dateToFilter"];
+                        $filter = $_GET["filter"];
+                        echo "<a href='advertisements.php?filter=" .
+                            $filter .
+                            "&dateToFilter=" .
+                            $dateToFilter .
+                            "&adpage=" .
+                            ($page_number - 1) .
+                            "'>  Prev </a>";
+                    }
+
+                    if (
+                        isset($_GET["filter"]) &&
+                        isset($_GET["dateFromFilter"]) &&
+                        isset($_GET["dateToFilter"])
+                    ) {
+                        $dateFromFilter = $_GET["dateFromFilter"];
+                        $dateToFilter = $_GET["dateToFilter"];
+                        $filter = $_GET["filter"];
+                        echo "<a href='advertisements.php?filter=" .
+                            $filter .
+                            "&dateToFilter=" .
+                            $dateToFilter .
+                            "&dateFromFilter=" .
+                            $dateFromFilter .
+                            "&adpage=" .
+                            ($page_number - 1) .
+                            "'>  Prev </a>";
+                    }
                 }
                 for ($i = 1; $i <= $total_pages; $i++) {
                     if ($i == $page_number) {
-                        $pageURL .=
-                            "<a class = 'activePage' href='advertisements.php?adpage=" .
-                            $i .
-                            "'>" .
-                            $i .
-                            " </a>";
+                        if (
+                            !isset($_GET["filter"]) &&
+                            !isset($_GET["dateFromFilter"]) &&
+                            !isset($_GET["dateToFilter"])
+                        ) {
+                            $pageURL .=
+                                "<a class = 'activePage' href='advertisements.php?adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            isset($_GET["filter"]) &&
+                            !isset($_GET["dateFromFilter"]) &&
+                            !isset($_GET["dateToFilter"])
+                        ) {
+                            $filter = $_GET["filter"];
+                            $pageURL .=
+                                "<a class = 'activePage' href='advertisements.php?filter=" .
+                                $filter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            !isset($_GET["filter"]) &&
+                            isset($_GET["dateFromFilter"]) &&
+                            isset($_GET["dateToFilter"])
+                        ) {
+                            $dateFromFilter = $_GET["dateFromFilter"];
+                            $dateToFilter = $_GET["dateToFilter"];
+                            $pageURL .=
+                                "<a class = 'activePage' href='advertisements.php?dateFromFilter=" .
+                                $dateFromFilter .
+                                "&dateToFilter=" .
+                                $dateToFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            !isset($_GET["filter"]) &&
+                            !isset($_GET["dateFromFilter"]) &&
+                            isset($_GET["dateToFilter"])
+                        ) {
+                            $dateToFilter = $_GET["dateToFilter"];
+                            $pageURL .=
+                                "<a class = 'activePage' href='advertisements.php?dateToFilter=" .
+                                $dateToFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            !isset($_GET["filter"]) &&
+                            isset($_GET["dateFromFilter"]) &&
+                            !isset($_GET["dateToFilter"])
+                        ) {
+                            $dateFromFilter = $_GET["dateFromFilter"];
+                            $pageURL .=
+                                "<a class = 'activePage' href='advertisements.php?dateFromFilter=" .
+                                $dateFromFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            isset($_GET["filter"]) &&
+                            !isset($_GET["dateFromFilter"]) &&
+                            isset($_GET["dateToFilter"])
+                        ) {
+                            $dateToFilter = $_GET["dateToFilter"];
+                            $filter = $_GET["filter"];
+                            $pageURL .=
+                                "<a class = 'activePage' href='advertisements.php?filter=" .
+                                $filter .
+                                "&dateToFilter=" .
+                                $dateToFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            isset($_GET["filter"]) &&
+                            isset($_GET["dateFromFilter"]) &&
+                            !isset($_GET["dateToFilter"])
+                        ) {
+                            $dateFromFilter = $_GET["dateFromFilter"];
+                            $filter = $_GET["filter"];
+                            $pageURL .=
+                                "<a class = 'activePage' href='advertisements.php?filter=" .
+                                $filter .
+                                "&dateFromFilter=" .
+                                $dateFromFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            isset($_GET["filter"]) &&
+                            isset($_GET["dateFromFilter"]) &&
+                            isset($_GET["dateToFilter"])
+                        ) {
+                            $dateFromFilter = $_GET["dateFromFilter"];
+                            $dateToFilter = $_GET["dateToFilter"];
+                            $filter = $_GET["filter"];
+                            $pageURL .=
+                                "<a class = 'activePage' href='advertisements.php?filter=" .
+                                $filter .
+                                "&dateFromFilter=" .
+                                $dateFromFilter .
+                                "&dateToFilter=" .
+                                $dateToFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
                     } else {
-                        $pageURL .=
-                            "<a href='advertisements.php?adpage=" .
-                            $i .
-                            "'>" .
-                            $i .
-                            " </a>";
+                        if (
+                            !isset($_GET["filter"]) &&
+                            !isset($_GET["dateFromFilter"]) &&
+                            !isset($_GET["dateToFilter"])
+                        ) {
+                            $pageURL .=
+                                "<a href='advertisements.php?adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            isset($_GET["filter"]) &&
+                            !isset($_GET["dateFromFilter"]) &&
+                            !isset($_GET["dateToFilter"])
+                        ) {
+                            $filter = $_GET["filter"];
+                            $pageURL .=
+                                "<a href='advertisements.php?filter=" .
+                                $filter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            !isset($_GET["filter"]) &&
+                            isset($_GET["dateFromFilter"]) &&
+                            isset($_GET["dateToFilter"])
+                        ) {
+                            $dateFromFilter = $_GET["dateFromFilter"];
+                            $dateToFilter = $_GET["dateToFilter"];
+                            $pageURL .=
+                                "<a href='advertisements.php?dateFromFilter=" .
+                                $dateFromFilter .
+                                "&dateToFilter=" .
+                                $dateToFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            !isset($_GET["filter"]) &&
+                            !isset($_GET["dateFromFilter"]) &&
+                            isset($_GET["dateToFilter"])
+                        ) {
+                            $dateToFilter = $_GET["dateToFilter"];
+                            $pageURL .=
+                                "<a href='advertisements.php?dateToFilter=" .
+                                $dateToFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            !isset($_GET["filter"]) &&
+                            isset($_GET["dateFromFilter"]) &&
+                            !isset($_GET["dateToFilter"])
+                        ) {
+                            $dateFromFilter = $_GET["dateFromFilter"];
+                            $pageURL .=
+                                "<a href='advertisements.php?dateFromFilter=" .
+                                $dateFromFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            isset($_GET["filter"]) &&
+                            !isset($_GET["dateFromFilter"]) &&
+                            isset($_GET["dateToFilter"])
+                        ) {
+                            $dateToFilter = $_GET["dateToFilter"];
+                            $filter = $_GET["filter"];
+                            $pageURL .=
+                                "<a href='advertisements.php?filter=" .
+                                $filter .
+                                "&dateToFilter=" .
+                                $dateToFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            isset($_GET["filter"]) &&
+                            isset($_GET["dateFromFilter"]) &&
+                            !isset($_GET["dateToFilter"])
+                        ) {
+                            $dateFromFilter = $_GET["dateFromFilter"];
+                            $filter = $_GET["filter"];
+                            $pageURL .=
+                                "<a href='advertisements.php?filter=" .
+                                $filter .
+                                "&dateFromFilter=" .
+                                $dateFromFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
+
+                        if (
+                            isset($_GET["filter"]) &&
+                            isset($_GET["dateFromFilter"]) &&
+                            isset($_GET["dateToFilter"])
+                        ) {
+                            $dateFromFilter = $_GET["dateFromFilter"];
+                            $dateToFilter = $_GET["dateToFilter"];
+                            $filter = $_GET["filter"];
+                            $pageURL .=
+                                "<a href='advertisements.php?filter=" .
+                                $filter .
+                                "&dateFromFilter=" .
+                                $dateFromFilter .
+                                "&dateToFilter=" .
+                                $dateToFilter .
+                                "&adpage=" .
+                                $i .
+                                "'>" .
+                                $i .
+                                " </a>";
+                        }
                     }
                 }
                 echo $pageURL;
                 if ($page_number < $total_pages) {
-                    echo "<a href='advertisements.php?adpage=" .
-                        ($page_number + 1) .
-                        "'>  Next </a>";
+                    if (
+                        !isset($_GET["filter"]) &&
+                        !isset($_GET["dateFromFilter"]) &&
+                        !isset($_GET["dateToFilter"])
+                    ) {
+                        echo "<a href='advertisements.php?adpage=" .
+                            ($page_number + 1) .
+                            "'>  Next </a>";
+                    }
+
+                    if (
+                        isset($_GET["filter"]) &&
+                        !isset($_GET["dateFromFilter"]) &&
+                        !isset($_GET["dateToFilter"])
+                    ) {
+                        $filter = $_GET["filter"];
+                        echo "<a href='advertisements.php?filter=" .
+                            $filter .
+                            "&adpage=" .
+                            ($page_number + 1) .
+                            "'>  Next </a>";
+                    }
+
+                    if (
+                        !isset($_GET["filter"]) &&
+                        isset($_GET["dateFromFilter"]) &&
+                        isset($_GET["dateToFilter"])
+                    ) {
+                        $dateFromFilter = $_GET["dateFromFilter"];
+                        $dateToFilter = $_GET["dateToFilter"];
+                        echo "<a href='advertisements.php?dateFromFilter=" .
+                            $dateFromFilter .
+                            "&dateToFilter=" .
+                            $dateToFilter .
+                            "&adpage=" .
+                            ($page_number + 1) .
+                            "'>  Next </a>";
+                    }
+
+                    if (
+                        !isset($_GET["filter"]) &&
+                        !isset($_GET["dateFromFilter"]) &&
+                        isset($_GET["dateToFilter"])
+                    ) {
+                        $dateToFilter = $_GET["dateToFilter"];
+                        echo "<a href='advertisements.php?dateToFilter=" .
+                            $dateToFilter .
+                            "&adpage=" .
+                            ($page_number + 1) .
+                            "'>  Next </a>";
+                    }
+
+                    if (
+                        !isset($_GET["filter"]) &&
+                        isset($_GET["dateFromFilter"]) &&
+                        !isset($_GET["dateToFilter"])
+                    ) {
+                        $dateFromFilter = $_GET["dateFromFilter"];
+                        echo "<a href='advertisements.php?dateFromFilter=" .
+                            $dateFromFilter .
+                            "&adpage=" .
+                            ($page_number + 1) .
+                            "'>  Next </a>";
+                    }
+
+                    if (
+                        isset($_GET["filter"]) &&
+                        isset($_GET["dateFromFilter"]) &&
+                        !isset($_GET["dateToFilter"])
+                    ) {
+                        $dateFromFilter = $_GET["dateFromFilter"];
+                        $filter = $_GET["filter"];
+                        echo "<a href='advertisements.php?filter=" .
+                            $filter .
+                            "&dateFromFilter=" .
+                            $dateFromFilter .
+                            "&adpage=" .
+                            ($page_number + 1) .
+                            "'>  Next </a>";
+                    }
+
+                    if (
+                        isset($_GET["filter"]) &&
+                        !isset($_GET["dateFromFilter"]) &&
+                        isset($_GET["dateToFilter"])
+                    ) {
+                        $dateToFilter = $_GET["dateToFilter"];
+                        $filter = $_GET["filter"];
+                        echo "<a href='advertisements.php?filter=" .
+                            $filter .
+                            "&dateToFilter=" .
+                            $dateToFilter .
+                            "&adpage=" .
+                            ($page_number + 1) .
+                            "'>  Next </a>";
+                    }
+
+                    if (
+                        isset($_GET["filter"]) &&
+                        isset($_GET["dateFromFilter"]) &&
+                        isset($_GET["dateToFilter"])
+                    ) {
+                        $dateFromFilter = $_GET["dateFromFilter"];
+                        $dateToFilter = $_GET["dateToFilter"];
+                        $filter = $_GET["filter"];
+                        echo "<a href='advertisements.php?filter=" .
+                            $filter .
+                            "&dateToFilter=" .
+                            $dateToFilter .
+                            "&dateFromFilter=" .
+                            $dateFromFilter .
+                            "&adpage=" .
+                            ($page_number + 1) .
+                            "'>  Next </a>";
+                    }
                 }
                 ?>
             </div>
@@ -278,7 +1100,7 @@
             var input = !document.getElementById("myInput") ?
                         document.getElementById("myInput").value : null;
             //console.log(input);
-            if(finalUrl.includes("adpage") || finalUrl.includes("filter")){
+            if(finalUrl.includes("adpage") || finalUrl.includes("filter") || finalUrl.includes("dateFromFilter") || finalUrl.includes("dateToFilter")){
                 window.location.href = finalUrl + "&adname=" + adname;  
             } else {
                 window.location.href = finalUrl + "?adname=" + adname;  
@@ -295,22 +1117,41 @@
         
       function filterWesbite() {
         var input = document.getElementById("myInput");
+        var dateFromInput = document.getElementById("myDateInput").value;
+        var dateToInput = document.getElementById("myDateInputTo").value;
+
         var filter = input.value.toLowerCase();
-        if (filter !== null || filter !== undefined || filter !== ' '){
-            if (filter.length > 0 ) {
-                var url = window.location.href;
-                const urlObj = new URL(url);
-                urlObj.searchParams.delete('adname');
-                urlObj.searchParams.delete('filter');
-                var finalUrl = urlObj.toString();
+        var url = window.location.href;
+        const urlObj = new URL(url);
+        urlObj.searchParams.delete('adpage');
+        urlObj.searchParams.delete('adname');
+        urlObj.searchParams.delete('filter');
+        urlObj.searchParams.delete('dateFromFilter');
+        urlObj.searchParams.delete('dateToFilter');
+        var finalUrl = urlObj.toString();
+        
+        if (true){
+            if (filter.length > 0 && dateFromInput.length > 0 && dateToInput.length > 0) {
+                window.location.href = finalUrl + "?filter=" + filter + "&dateFromFilter=" + dateFromInput + "&dateToFilter=" + dateToInput;
+            } else if (filter.length > 0 && !dateFromInput && !dateToInput) {
                 window.location.href = finalUrl + "?filter=" + filter;
+            } else if (!filter && dateFromInput.length > 0 && dateToInput.length > 0) {
+                window.location.href = finalUrl + "?dateFromFilter=" + dateFromInput + "&dateToFilter=" + dateToInput;
+            } else if (!filter && !dateFromInput && dateToInput.length > 0) {
+                window.location.href = finalUrl + "?dateToFilter=" + dateToInput;
+            } else if (!filter && dateFromInput.length > 0 && !dateToInput) {
+                window.location.href = finalUrl + "?dateFromFilter=" + dateFromInput;
+            } else if (filter.length > 0 && !dateFromInput && dateToInput.length > 0) {
+                window.location.href = finalUrl + "?filter=" + filter + "&dateToFilter=" + dateToInput;
+            } else if (filter.length > 0 && dateFromInput.length > 0 && !dateToInput) {
+                window.location.href = finalUrl + "?filter=" + filter + "&dateFromFilter=" + dateFromInput;
             } else {
                 window.location.href = "advertisements.php";
             }
         } else {
             window.location.href = "advertisements.php";
         }
-      }      
+      }    
     </script>
 </body>
 </html>

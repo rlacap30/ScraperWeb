@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Request New Source</title>
   
-  <link rel="preload" href="assistancestylei.css" as="style" />
+  <link rel="preload" href="assistancestylel.css" as="style" />
   <link rel="preload" href="indextest.js" as="script" />  
-  <link rel = "stylesheet" type="text/css" href = "assistancestylei.css">
+  <link rel = "stylesheet" type="text/css" href = "assistancestylel.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
 </head>
 <body>
     <?php
          session_start();
          if (!isset($_SESSION['username'])) {
-    		 header("Location: login.php"); 
+    		 #header("Location: login.php"); 
          } 
          if(isset($_POST['submit'])){             
              $assistanceAddress = 'assistancescraper@gmail.com'; // this is your Email address
@@ -53,10 +53,23 @@
                 </div>
             </div>
             <div class="sidebar">
-                <a href="advertisements.php">
-                    <span class="material-icons-sharp">grid_view</span>
-                    <h3>Dashboard</h3>
-                </a>
+                <div class="dropdown">
+                    <a href="advertisements.php" class="dropdown-anchor">
+                        <span class="material-icons-sharp">grid_view</span>
+                        <h3 style="display:inline-flex">
+                          Dashboards 
+                          <span class="material-icons-sharp">keyboard_arrow_down</span>
+                        </h3>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="germany.php"> Germany </a>
+                        <a href="switzerland.php"> Switzerland </a>
+                        <a href="sweden.php"> Sweden </a>
+                        <a href="poland.php"> Poland </a>
+                        <a href="uk.php"> UK </a>
+                        <a href="#" style="display:none">  </a>
+                    </div>
+                </div>
                 <a href="execute.php">
                     <span class="material-icons-sharp">receipt_long</span>
                     <h3>Sources</h3>

@@ -15,7 +15,7 @@
     <?php
     session_start();
     if (!isset($_SESSION["username"])) {
-        #header("Location: login.php");
+        header("Location: login.php");
     }
     ?>
     <div class="container">
@@ -47,10 +47,23 @@
                         <a href="#" style="display:none">  </a>
                     </div>
                 </div>
-                <a href="execute.php">
-                    <span class="material-icons-sharp">receipt_long</span>
-                    <h3>Sources</h3>
-                </a>
+                <div class="dropdown">
+                    <a href="execute.php" class="dropdown-anchor">
+                        <span class="material-icons-sharp">receipt_long</span>
+                        <h3 style="display:inline-flex">
+                          Sources 
+                          <span class="material-icons-sharp">keyboard_arrow_down</span>
+                        </h3>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="germanySources.php"> Germany </a>
+                        <a href="switzerlandSources.php"> Switzerland </a>
+                        <a href="swedenSources.php"> Sweden </a>
+                        <a href="polandSources.php"> Poland </a>
+                        <a href="ukSources.php"> UK </a>
+                        <a href="#" style="display:none">  </a>
+                    </div>
+                </div>
                 <a href="assistance.php">
                     <span class="material-icons-sharp">add</span>
                     <h3>Request New Source</h3>

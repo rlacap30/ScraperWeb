@@ -187,6 +187,7 @@
                 echo "</br>";
                 $total_pages = ceil($total_rows / $limit);
                 $pageURL = "";
+
                 if ($page_number >= 2) {
                     if (!isset($_GET["filter"])) {
                         echo "<a href='germanySources.php?page=" .
@@ -202,51 +203,82 @@
                             "'>  Prev </a>";
                     }
                 }
-                for ($i = 1; $i <= $total_pages; $i++) {
-                    if ($i == $page_number) {
-                        if (!isset($_GET["filter"])) {
-                            $pageURL .=
-                                "<a class = 'activePage' href='germanySources.php?page=" .
-                                $i .
-                                "&filter=" .
-                                $_GET["filter"] .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
 
-                        if (isset($_GET["filter"])) {
-                            $pageURL .=
-                                "<a class = 'activePage' href='germanySources.php?page=" .
-                                $i .
-                                "&filter=" .
-                                $_GET["filter"] .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
-                    } else {
-                        if (!isset($_GET["filter"])) {
-                            $pageURL .=
-                                "<a href='germanySources.php?page=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                if ($total_pages > 10) {
+                    // Show arrows only when total pages is more than 10
+                    if ($page_number > 1) {
+                        echo "<a href='germanySources.php?adpage=1'> << </a>";
+                        echo "<a href='germanySources.php?adpage=" .
+                            ($page_number - 1) .
+                            "'> < </a>";
+                    }
 
-                        if (isset($_GET["filter"])) {
-                            $pageURL .=
-                                "<a href='germanySources.php?page=" .
-                                $i .
-                                "&filter=" .
-                                $_GET["filter"] .
-                                "'>" .
-                                $i .
-                                " </a>";
+                    for (
+                        $i = max(1, $page_number - 5);
+                        $i <= min($page_number + 5, $total_pages);
+                        $i++
+                    ) {
+                        if ($i == $page_number) {
+                            echo "<a class='activePage'>$i</a>";
+                        } else {
+                            echo "<a href='germanySources.php?adpage=$i'>$i</a>";
+                        }
+                    }
+
+                    if ($page_number < $total_pages) {
+                        echo "<a href='germanySources.php?adpage=" .
+                            ($page_number + 1) .
+                            "'> > </a>";
+                        echo "<a href='germanySources.php?adpage=$total_pages'> >> </a>";
+                    }
+                } else {
+                    for ($i = 1; $i <= $total_pages; $i++) {
+                        if ($i == $page_number) {
+                            if (!isset($_GET["filter"])) {
+                                $pageURL .=
+                                    "<a class = 'activePage' href='germanySources.php?page=" .
+                                    $i .
+                                    "&filter=" .
+                                    $_GET["filter"] .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
+
+                            if (isset($_GET["filter"])) {
+                                $pageURL .=
+                                    "<a class = 'activePage' href='germanySources.php?page=" .
+                                    $i .
+                                    "&filter=" .
+                                    $_GET["filter"] .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
+                        } else {
+                            if (!isset($_GET["filter"])) {
+                                $pageURL .=
+                                    "<a href='germanySources.php?page=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
+
+                            if (isset($_GET["filter"])) {
+                                $pageURL .=
+                                    "<a href='germanySources.php?page=" .
+                                    $i .
+                                    "&filter=" .
+                                    $_GET["filter"] .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
                         }
                     }
                 }
+
                 echo $pageURL;
                 if ($page_number < $total_pages) {
                     if (!isset($_GET["filter"])) {

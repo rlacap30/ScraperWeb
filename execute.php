@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sources</title>
   
-  <link rel="preload" href="mystylei.css" as="style" />
+  <link rel="preload" href="mystylej.css" as="style" />
   <link rel="preload" href="indextest.js" as="script" />  
-  <link rel = "stylesheet" type="text/css" href = "mystylei.css">
+  <link rel = "stylesheet" type="text/css" href = "mystylej.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
 </head>
 <body>
     <?php
          session_start();
          if (!isset($_SESSION['username'])) {
-    		 #header("Location: login.php"); 
+    		 header("Location: login.php"); 
          } 
     ?>
     <div class="container">
@@ -47,10 +47,23 @@
                         <a href="#" style="display:none">  </a>
                     </div>
                 </div>
-                <a href="execute.php"  class="active">
-                    <span class="material-icons-sharp">receipt_long</span>
-                    <h3>Sources</h3>
-                </a>
+                <div class="dropdown">
+                    <a href="execute.php" class="dropdown-anchor active">
+                        <span class="material-icons-sharp">receipt_long</span>
+                        <h3 style="display:inline-flex">
+                          Sources 
+                          <span class="material-icons-sharp">keyboard_arrow_down</span>
+                        </h3>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="germanySources.php"> Germany </a>
+                        <a href="switzerlandSources.php"> Switzerland </a>
+                        <a href="swedenSources.php"> Sweden </a>
+                        <a href="polandSources.php"> Poland </a>
+                        <a href="ukSources.php"> UK </a>
+                        <a href="#" style="display:none">  </a>
+                    </div>
+                </div>
                 <a href="assistance.php">
                     <span class="material-icons-sharp">add</span>
                     <h3>Request New Source</h3>
@@ -64,11 +77,11 @@
         
         <main>
           <div class="websites">
-            <h2>Websites</h2>
+            <h2>Sources</h2>
             <?php
               if (!isset($_GET["filter"])) {
                     echo "<div class='filter'>";
-                    echo '<input type="text" id="myInput" placeholder="Website Name">';
+                    echo '<input type="text" id="myInput" placeholder="Source Name">';
                     echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
                     echo "</div>";
                 }
@@ -76,7 +89,7 @@
                 if (isset($_GET["filter"])) {
                     $value = $_GET["filter"];
                     echo "<div class='filter'>";
-                    echo "<input type='text' value='$value' id='myInput' placeholder='Website Name'>";
+                    echo "<input type='text' value='$value' id='myInput' placeholder='Source Name'>";
                     echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
                     echo "</div>";
                 }
@@ -84,7 +97,7 @@
             <table id="myTable">
               <thead>
                 <tr>
-                  <th> Website Name </th>
+                  <th> Source Name </th>
                   <th> Action </th>
                 </tr>
               </thead>
@@ -106,12 +119,25 @@
                     }                  
                     
                     if (!isset($_GET["filter"])) {
-                        $sql = "SELECT * FROM Websites LIMIT $initial_page, $limit";
+                        $sql = "SELECT Websites.Name as Name, Websites.Id AS Wid, 
+                                Websites.IsScriptActive  
+                                FROM Websites 
+                                JOIN Parameters on Websites.Id = Parameters.WebsiteId
+                                WHERE Parameters.buffer_two = 'international'
+                                ORDER BY Websites.CreatedDate desc
+                                LIMIT $initial_page, $limit";
                     }
                     
                     if (isset($_GET["filter"])) {
                         $filter = $_GET["filter"];
-                        $sql = "SELECT * FROM Websites WHERE Name LIKE '%$filter%' LIMIT $initial_page, $limit";
+                        $sql = "SELECT Websites.Name as Name, Websites.Id AS Wid, 
+                                Websites.IsScriptActive 
+                                FROM Websites 
+                                JOIN Parameters on Websites.Id = Parameters.WebsiteId
+                                WHERE Parameters.buffer_two = 'international' AND
+                                Websites.Name LIKE '%$filter%' 
+                                ORDER BY Websites.CreatedDate desc
+                                LIMIT $initial_page, $limit";
                     }
                     
                     $rows = mysqli_query($conn, $sql);
@@ -119,7 +145,7 @@
                         $result_script = $row["IsScriptActive"] == 1 ? 'check_box' : 'check_box_outline_blank';
                         echo "<tr>";
                         echo "<td>".$row["Name"]."</td>";
-                        echo "<td><a href='shouldActivateScript.php?id=".$row["Id"]."&value=".$row["IsScriptActive"]."' id='execute'><span id='executeValue' class='material-icons-sharp'>$result_script</span></a></td>";
+                        echo "<td><a href='activateScript.php?id=".$row["Wid"]."&value=".$row["IsScriptActive"]."' id='execute'><span id='executeValue' class='material-icons-sharp'>$result_script</span></a></td>";
                         echo "</tr>";
                     }
                 ?>
@@ -128,12 +154,19 @@
             <div class="items">
                 <?php  
                     if (!isset($_GET["filter"])) {
-                        $getQuery = "SELECT COUNT(*) FROM Websites Order By Name";
+                        $getQuery = "SELECT COUNT(*) 
+                                     FROM Websites 
+                                     JOIN Parameters on Websites.Id = Parameters.WebsiteId
+                                     WHERE Parameters.buffer_two = 'international'";
                     }
                     
                     if (isset($_GET["filter"])) {
                         $filter = $_GET["filter"];
-                        $getQuery = "SELECT COUNT(*) FROM Websites WHERE Name LIKE '%$filter%' Order By Name";
+                        $getQuery = "SELECT COUNT(*) 
+                        FROM Websites 
+                        JOIN Parameters on Websites.Id = Parameters.WebsiteId
+                        WHERE Parameters.buffer_two = 'international' AND 
+                        Websites.Name LIKE '%$filter%'";
                     }
                     
                     $result = mysqli_query($conn, $getQuery);    
@@ -143,18 +176,44 @@
                     $total_pages = ceil($total_rows / $limit);     
                     $pageURL = "";     
                     if($page_number>=2){   
-                        echo "<a href='index.php?page=".($page_number-1)."'>  Prev </a>";   
+                        if(!isset($_GET["filter"])){
+                          echo "<a href='execute.php?page=".($page_number-1)."'>  Prev </a>";   
+                        }   
+                        
+                        if(isset($_GET["filter"])){
+                          echo "<a href='execute.php?page=".($page_number-1)."&filter=".$_GET["filter"]."'>  Prev </a>";  
+                        }
                     }
                     for ($i=1; $i<=$total_pages; $i++) {   
                         if ($i == $page_number) {   
-                            $pageURL .= "<a class = 'activePage' href='index.php?page=".$i."'>".$i." </a>";   
+                            if(!isset($_GET["filter"])){
+                                $pageURL .= "<a class = 'activePage' href='execute.php?page=".$i."&filter=".$_GET["filter"]."'>".$i." </a>";   
+                            }
+                            
+                            
+                            if(isset($_GET["filter"])){
+                                $pageURL .= "<a class = 'activePage' href='execute.php?page=".$i."&filter=".$_GET["filter"]."'>".$i." </a>";   
+                            }
                         } else {
-                            $pageURL .= "<a href='index.php?page=".$i."'>".$i." </a>";   
+                            if(!isset($_GET["filter"])){
+                              $pageURL .= "<a href='execute.php?page=".$i."'>".$i." </a>";   
+                            }
+                            
+                            if(isset($_GET["filter"])){
+                              $pageURL .= "<a href='execute.php?page=".$i."&filter=".$_GET["filter"]."'>".$i." </a>";   
+                            }
                         }
                     }
                     echo $pageURL;  
                     if($page_number<$total_pages){   
-                        echo "<a href='index.php?page=".($page_number+1)."'>  Next </a>";   
+                        if(!isset($_GET["filter"])){
+                          echo "<a href='execute.php?page=".($page_number+1)."'>  Next </a>";   
+                        }
+                        
+                        
+                         if(isset($_GET["filter"])){
+                          echo "<a href='execute.php?page=".($page_number+1)."&filter=".$_GET["filter"]."'>  Next </a>";   
+                        }
                     }
                 ?>
             </div>
@@ -182,16 +241,23 @@
     </div>
     <script src="indextest.js"></script>
     <script>
-           function filterWesbite() {
+    function filterWesbite() {
         var input = document.getElementById("myInput");
+        //var dateFromInput = document.getElementById("myDateInput").value;
+        //var dateToInput = document.getElementById("myDateInputTo").value;
+
         var filter = input.value.toLowerCase();
-        if (filter !== null || filter !== undefined || filter !== ' '){
-            if (filter.length > 0 ) {
-                var url = window.location.href;
-                const urlObj = new URL(url);
-                //urlObj.searchParams.delete('adname');
-                urlObj.searchParams.delete('filter');
-                var finalUrl = urlObj.toString();
+        var url = window.location.href;
+        const urlObj = new URL(url);
+        urlObj.searchParams.delete('page');
+        urlObj.searchParams.delete('adname');
+        urlObj.searchParams.delete('filter');
+        //urlObj.searchParams.delete('dateFromFilter');
+        //urlObj.searchParams.delete('dateToFilter');
+        var finalUrl = urlObj.toString();
+        
+        if (true){
+            if (filter.length > 0) {
                 window.location.href = finalUrl + "?filter=" + filter;
             } else {
                 window.location.href = "execute.php";
@@ -199,7 +265,7 @@
         } else {
             window.location.href = "execute.php";
         }
-      }     
+      }    
     </script>
 </body>
 </html>

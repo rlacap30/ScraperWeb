@@ -675,289 +675,320 @@
                             "'>  Prev </a>";
                     }
                 }
-                for ($i = 1; $i <= $total_pages; $i++) {
-                    if ($i == $page_number) {
-                        if (
-                            !isset($_GET["filter"]) &&
-                            !isset($_GET["dateFromFilter"]) &&
-                            !isset($_GET["dateToFilter"])
-                        ) {
-                            $pageURL .=
-                                "<a class = 'activePage' href='germany.php?adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
 
-                        if (
-                            isset($_GET["filter"]) &&
-                            !isset($_GET["dateFromFilter"]) &&
-                            !isset($_GET["dateToFilter"])
-                        ) {
-                            $filter = $_GET["filter"];
-                            $pageURL .=
-                                "<a class = 'activePage' href='germany.php?filter=" .
-                                $filter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                if ($total_pages > 10) {
+                    // Show arrows only when total pages is more than 10
+                    if ($page_number > 1) {
+                        echo "<a href='germany.php?adpage=1'> << </a>";
+                        echo "<a href='germany.php?adpage=" .
+                            ($page_number - 1) .
+                            "'> < </a>";
+                    }
 
-                        if (
-                            !isset($_GET["filter"]) &&
-                            isset($_GET["dateFromFilter"]) &&
-                            isset($_GET["dateToFilter"])
-                        ) {
-                            $dateFromFilter = $_GET["dateFromFilter"];
-                            $dateToFilter = $_GET["dateToFilter"];
-                            $pageURL .=
-                                "<a class = 'activePage' href='germany.php?dateFromFilter=" .
-                                $dateFromFilter .
-                                "&dateToFilter=" .
-                                $dateToFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
+                    for (
+                        $i = max(1, $page_number - 5);
+                        $i <= min($page_number + 5, $total_pages);
+                        $i++
+                    ) {
+                        if ($i == $page_number) {
+                            echo "<a class='activePage'>$i</a>";
+                        } else {
+                            echo "<a href='germany.php?adpage=$i'>$i</a>";
                         }
+                    }
 
-                        if (
-                            !isset($_GET["filter"]) &&
-                            !isset($_GET["dateFromFilter"]) &&
-                            isset($_GET["dateToFilter"])
-                        ) {
-                            $dateToFilter = $_GET["dateToFilter"];
-                            $pageURL .=
-                                "<a class = 'activePage' href='germany.php?dateToFilter=" .
-                                $dateToFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                    if ($page_number < $total_pages) {
+                        echo "<a href='germany.php?adpage=" .
+                            ($page_number + 1) .
+                            "'> > </a>";
+                        echo "<a href='germany.php?adpage=$total_pages'> >> </a>";
+                    }
+                } else {
+                    for ($i = 1; $i <= $total_pages; $i++) {
+                        if ($i == $page_number) {
+                            if (
+                                !isset($_GET["filter"]) &&
+                                !isset($_GET["dateFromFilter"]) &&
+                                !isset($_GET["dateToFilter"])
+                            ) {
+                                $pageURL .=
+                                    "<a class = 'activePage' href='germany.php?adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            !isset($_GET["filter"]) &&
-                            isset($_GET["dateFromFilter"]) &&
-                            !isset($_GET["dateToFilter"])
-                        ) {
-                            $dateFromFilter = $_GET["dateFromFilter"];
-                            $pageURL .=
-                                "<a class = 'activePage' href='germany.php?dateFromFilter=" .
-                                $dateFromFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                            if (
+                                isset($_GET["filter"]) &&
+                                !isset($_GET["dateFromFilter"]) &&
+                                !isset($_GET["dateToFilter"])
+                            ) {
+                                $filter = $_GET["filter"];
+                                $pageURL .=
+                                    "<a class = 'activePage' href='germany.php?filter=" .
+                                    $filter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            isset($_GET["filter"]) &&
-                            !isset($_GET["dateFromFilter"]) &&
-                            isset($_GET["dateToFilter"])
-                        ) {
-                            $dateToFilter = $_GET["dateToFilter"];
-                            $filter = $_GET["filter"];
-                            $pageURL .=
-                                "<a class = 'activePage' href='germany.php?filter=" .
-                                $filter .
-                                "&dateToFilter=" .
-                                $dateToFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                            if (
+                                !isset($_GET["filter"]) &&
+                                isset($_GET["dateFromFilter"]) &&
+                                isset($_GET["dateToFilter"])
+                            ) {
+                                $dateFromFilter = $_GET["dateFromFilter"];
+                                $dateToFilter = $_GET["dateToFilter"];
+                                $pageURL .=
+                                    "<a class = 'activePage' href='germany.php?dateFromFilter=" .
+                                    $dateFromFilter .
+                                    "&dateToFilter=" .
+                                    $dateToFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            isset($_GET["filter"]) &&
-                            isset($_GET["dateFromFilter"]) &&
-                            !isset($_GET["dateToFilter"])
-                        ) {
-                            $dateFromFilter = $_GET["dateFromFilter"];
-                            $filter = $_GET["filter"];
-                            $pageURL .=
-                                "<a class = 'activePage' href='germany.php?filter=" .
-                                $filter .
-                                "&dateFromFilter=" .
-                                $dateFromFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                            if (
+                                !isset($_GET["filter"]) &&
+                                !isset($_GET["dateFromFilter"]) &&
+                                isset($_GET["dateToFilter"])
+                            ) {
+                                $dateToFilter = $_GET["dateToFilter"];
+                                $pageURL .=
+                                    "<a class = 'activePage' href='germany.php?dateToFilter=" .
+                                    $dateToFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            isset($_GET["filter"]) &&
-                            isset($_GET["dateFromFilter"]) &&
-                            isset($_GET["dateToFilter"])
-                        ) {
-                            $dateFromFilter = $_GET["dateFromFilter"];
-                            $dateToFilter = $_GET["dateToFilter"];
-                            $filter = $_GET["filter"];
-                            $pageURL .=
-                                "<a class = 'activePage' href='germany.php?filter=" .
-                                $filter .
-                                "&dateFromFilter=" .
-                                $dateFromFilter .
-                                "&dateToFilter=" .
-                                $dateToFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
-                    } else {
-                        if (
-                            !isset($_GET["filter"]) &&
-                            !isset($_GET["dateFromFilter"]) &&
-                            !isset($_GET["dateToFilter"])
-                        ) {
-                            $pageURL .=
-                                "<a href='germany.php?adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                            if (
+                                !isset($_GET["filter"]) &&
+                                isset($_GET["dateFromFilter"]) &&
+                                !isset($_GET["dateToFilter"])
+                            ) {
+                                $dateFromFilter = $_GET["dateFromFilter"];
+                                $pageURL .=
+                                    "<a class = 'activePage' href='germany.php?dateFromFilter=" .
+                                    $dateFromFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            isset($_GET["filter"]) &&
-                            !isset($_GET["dateFromFilter"]) &&
-                            !isset($_GET["dateToFilter"])
-                        ) {
-                            $filter = $_GET["filter"];
-                            $pageURL .=
-                                "<a href='germany.php?filter=" .
-                                $filter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                            if (
+                                isset($_GET["filter"]) &&
+                                !isset($_GET["dateFromFilter"]) &&
+                                isset($_GET["dateToFilter"])
+                            ) {
+                                $dateToFilter = $_GET["dateToFilter"];
+                                $filter = $_GET["filter"];
+                                $pageURL .=
+                                    "<a class = 'activePage' href='germany.php?filter=" .
+                                    $filter .
+                                    "&dateToFilter=" .
+                                    $dateToFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            !isset($_GET["filter"]) &&
-                            isset($_GET["dateFromFilter"]) &&
-                            isset($_GET["dateToFilter"])
-                        ) {
-                            $dateFromFilter = $_GET["dateFromFilter"];
-                            $dateToFilter = $_GET["dateToFilter"];
-                            $pageURL .=
-                                "<a href='germany.php?dateFromFilter=" .
-                                $dateFromFilter .
-                                "&dateToFilter=" .
-                                $dateToFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                            if (
+                                isset($_GET["filter"]) &&
+                                isset($_GET["dateFromFilter"]) &&
+                                !isset($_GET["dateToFilter"])
+                            ) {
+                                $dateFromFilter = $_GET["dateFromFilter"];
+                                $filter = $_GET["filter"];
+                                $pageURL .=
+                                    "<a class = 'activePage' href='germany.php?filter=" .
+                                    $filter .
+                                    "&dateFromFilter=" .
+                                    $dateFromFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            !isset($_GET["filter"]) &&
-                            !isset($_GET["dateFromFilter"]) &&
-                            isset($_GET["dateToFilter"])
-                        ) {
-                            $dateToFilter = $_GET["dateToFilter"];
-                            $pageURL .=
-                                "<a href='germany.php?dateToFilter=" .
-                                $dateToFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                            if (
+                                isset($_GET["filter"]) &&
+                                isset($_GET["dateFromFilter"]) &&
+                                isset($_GET["dateToFilter"])
+                            ) {
+                                $dateFromFilter = $_GET["dateFromFilter"];
+                                $dateToFilter = $_GET["dateToFilter"];
+                                $filter = $_GET["filter"];
+                                $pageURL .=
+                                    "<a class = 'activePage' href='germany.php?filter=" .
+                                    $filter .
+                                    "&dateFromFilter=" .
+                                    $dateFromFilter .
+                                    "&dateToFilter=" .
+                                    $dateToFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
+                        } else {
+                            if (
+                                !isset($_GET["filter"]) &&
+                                !isset($_GET["dateFromFilter"]) &&
+                                !isset($_GET["dateToFilter"])
+                            ) {
+                                $pageURL .=
+                                    "<a href='germany.php?adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            !isset($_GET["filter"]) &&
-                            isset($_GET["dateFromFilter"]) &&
-                            !isset($_GET["dateToFilter"])
-                        ) {
-                            $dateFromFilter = $_GET["dateFromFilter"];
-                            $pageURL .=
-                                "<a href='germany.php?dateFromFilter=" .
-                                $dateFromFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                            if (
+                                isset($_GET["filter"]) &&
+                                !isset($_GET["dateFromFilter"]) &&
+                                !isset($_GET["dateToFilter"])
+                            ) {
+                                $filter = $_GET["filter"];
+                                $pageURL .=
+                                    "<a href='germany.php?filter=" .
+                                    $filter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            isset($_GET["filter"]) &&
-                            !isset($_GET["dateFromFilter"]) &&
-                            isset($_GET["dateToFilter"])
-                        ) {
-                            $dateToFilter = $_GET["dateToFilter"];
-                            $filter = $_GET["filter"];
-                            $pageURL .=
-                                "<a href='germany.php?filter=" .
-                                $filter .
-                                "&dateToFilter=" .
-                                $dateToFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                            if (
+                                !isset($_GET["filter"]) &&
+                                isset($_GET["dateFromFilter"]) &&
+                                isset($_GET["dateToFilter"])
+                            ) {
+                                $dateFromFilter = $_GET["dateFromFilter"];
+                                $dateToFilter = $_GET["dateToFilter"];
+                                $pageURL .=
+                                    "<a href='germany.php?dateFromFilter=" .
+                                    $dateFromFilter .
+                                    "&dateToFilter=" .
+                                    $dateToFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            isset($_GET["filter"]) &&
-                            isset($_GET["dateFromFilter"]) &&
-                            !isset($_GET["dateToFilter"])
-                        ) {
-                            $dateFromFilter = $_GET["dateFromFilter"];
-                            $filter = $_GET["filter"];
-                            $pageURL .=
-                                "<a href='germany.php?filter=" .
-                                $filter .
-                                "&dateFromFilter=" .
-                                $dateFromFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
-                        }
+                            if (
+                                !isset($_GET["filter"]) &&
+                                !isset($_GET["dateFromFilter"]) &&
+                                isset($_GET["dateToFilter"])
+                            ) {
+                                $dateToFilter = $_GET["dateToFilter"];
+                                $pageURL .=
+                                    "<a href='germany.php?dateToFilter=" .
+                                    $dateToFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
 
-                        if (
-                            isset($_GET["filter"]) &&
-                            isset($_GET["dateFromFilter"]) &&
-                            isset($_GET["dateToFilter"])
-                        ) {
-                            $dateFromFilter = $_GET["dateFromFilter"];
-                            $dateToFilter = $_GET["dateToFilter"];
-                            $filter = $_GET["filter"];
-                            $pageURL .=
-                                "<a href='germany.php?filter=" .
-                                $filter .
-                                "&dateFromFilter=" .
-                                $dateFromFilter .
-                                "&dateToFilter=" .
-                                $dateToFilter .
-                                "&adpage=" .
-                                $i .
-                                "'>" .
-                                $i .
-                                " </a>";
+                            if (
+                                !isset($_GET["filter"]) &&
+                                isset($_GET["dateFromFilter"]) &&
+                                !isset($_GET["dateToFilter"])
+                            ) {
+                                $dateFromFilter = $_GET["dateFromFilter"];
+                                $pageURL .=
+                                    "<a href='germany.php?dateFromFilter=" .
+                                    $dateFromFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
+
+                            if (
+                                isset($_GET["filter"]) &&
+                                !isset($_GET["dateFromFilter"]) &&
+                                isset($_GET["dateToFilter"])
+                            ) {
+                                $dateToFilter = $_GET["dateToFilter"];
+                                $filter = $_GET["filter"];
+                                $pageURL .=
+                                    "<a href='germany.php?filter=" .
+                                    $filter .
+                                    "&dateToFilter=" .
+                                    $dateToFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
+
+                            if (
+                                isset($_GET["filter"]) &&
+                                isset($_GET["dateFromFilter"]) &&
+                                !isset($_GET["dateToFilter"])
+                            ) {
+                                $dateFromFilter = $_GET["dateFromFilter"];
+                                $filter = $_GET["filter"];
+                                $pageURL .=
+                                    "<a href='germany.php?filter=" .
+                                    $filter .
+                                    "&dateFromFilter=" .
+                                    $dateFromFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
+
+                            if (
+                                isset($_GET["filter"]) &&
+                                isset($_GET["dateFromFilter"]) &&
+                                isset($_GET["dateToFilter"])
+                            ) {
+                                $dateFromFilter = $_GET["dateFromFilter"];
+                                $dateToFilter = $_GET["dateToFilter"];
+                                $filter = $_GET["filter"];
+                                $pageURL .=
+                                    "<a href='germany.php?filter=" .
+                                    $filter .
+                                    "&dateFromFilter=" .
+                                    $dateFromFilter .
+                                    "&dateToFilter=" .
+                                    $dateToFilter .
+                                    "&adpage=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
+                            }
                         }
                     }
                 }
+
                 echo $pageURL;
                 if ($page_number < $total_pages) {
                     if (

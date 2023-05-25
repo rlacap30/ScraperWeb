@@ -13,10 +13,10 @@
 </head>
 <body>
     <?php
-         session_start();
-         if (!isset($_SESSION['username'])) {
-    		 header("Location: login.php"); 
-         } 
+    session_start();
+    if (!isset($_SESSION["username"])) {
+        header("Location: login.php");
+    }
     ?>
     <div class="container">
         <aside>
@@ -79,20 +79,20 @@
           <div class="websites">
             <h2>UK Sources</h2>
             <?php
-              if (!isset($_GET["filter"])) {
-                    echo "<div class='filter'>";
-                    echo '<input type="text" id="myInput" placeholder="Source Name">';
-                    echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
-                    echo "</div>";
-                }
-                
-                if (isset($_GET["filter"])) {
-                    $value = $_GET["filter"];
-                    echo "<div class='filter'>";
-                    echo "<input type='text' value='$value' id='myInput' placeholder='Source Name'>";
-                    echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
-                    echo "</div>";
-                }
+            if (!isset($_GET["filter"])) {
+                echo "<div class='filter'>";
+                echo '<input type="text" id="myInput" placeholder="Source Name">';
+                echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
+                echo "</div>";
+            }
+
+            if (isset($_GET["filter"])) {
+                $value = $_GET["filter"];
+                echo "<div class='filter'>";
+                echo "<input type='text' value='$value' id='myInput' placeholder='Source Name'>";
+                echo '<input type="button" name="submit" onclick="filterWesbite()" value="Search">';
+                echo "</div>";
+            }
             ?>
             <table id="myTable">
               <thead>
@@ -103,118 +103,198 @@
               </thead>
               <tbody id="mainData">
                 <?php
-                    session_start();
-                    $limit = 10;    
-                    if (isset($_GET["page"])) {   
-                        $page_number  = $_GET["page"];    
-                    } else {
-                        $page_number=1;    
-                    }
-                    
-                    $initial_page = ($page_number-1) * $limit;       
-                
-                    $conn = mysqli_connect("localhost", "lacaprose5bin", "", "my_lacaprose5bin");
-                    if (!$conn) {
-                        die("Connection failed: " . mysqli_connect_error());
-                    }                  
-                    
-                    if (!isset($_GET["filter"])) {
-                        $sql = "SELECT Websites.Name as Name, Websites.Id AS Wid, 
+                session_start();
+                $limit = 10;
+                if (isset($_GET["page"])) {
+                    $page_number = $_GET["page"];
+                } else {
+                    $page_number = 1;
+                }
+
+                $initial_page = ($page_number - 1) * $limit;
+
+                $conn = mysqli_connect(
+                    "localhost",
+                    "lacaprose5bin",
+                    "",
+                    "my_lacaprose5bin"
+                );
+                if (!$conn) {
+                    die("Connection failed: " . mysqli_connect_error());
+                }
+
+                if (!isset($_GET["filter"])) {
+                    $sql = "SELECT Websites.Name as Name, Websites.Id AS Wid, 
                                 Websites.IsScriptActive 
                                 FROM Websites 
                                 JOIN Parameters on Websites.Id = Parameters.WebsiteId
                                 WHERE Parameters.buffer_two = 'uk'
                                 ORDER BY Websites.CreatedDate desc
                                 LIMIT $initial_page, $limit";
-                    }
-                    
-                    if (isset($_GET["filter"])) {
-                        $filter = $_GET["filter"];
-                        $sql = "SELECT Websites.Name as Name, Websites.Id AS Wid, 
-                                Websites.IsScriptActive  
+                }
+
+                if (isset($_GET["filter"])) {
+                    $filter = $_GET["filter"];
+                    $sql = "SELECT Websites.Name as Name, Websites.Id AS Wid, 
+                                Websites.IsScriptActive 
                                 FROM Websites 
                                 JOIN Parameters on Websites.Id = Parameters.WebsiteId
                                 WHERE Parameters.buffer_two = 'uk' AND
                                 Websites.Name LIKE '%$filter%' 
                                 ORDER BY Websites.CreatedDate desc
                                 LIMIT $initial_page, $limit";
-                    }
-                    
-                    $rows = mysqli_query($conn, $sql);
-                    while($row = mysqli_fetch_assoc($rows)) {
-                        $result_script = $row["IsScriptActive"] == 1 ? 'check_box' : 'check_box_outline_blank';
-                        echo "<tr>";
-                        echo "<td>".$row["Name"]."</td>";
-                        echo "<td><a href='activateScript.php?country=uk&id=".$row["Wid"]."&value=".$row["IsScriptActive"]."' id='execute'><span id='executeValue' class='material-icons-sharp'>$result_script</span></a></td>";
-                        echo "</tr>";
-                    }
+                }
+
+                $rows = mysqli_query($conn, $sql);
+                while ($row = mysqli_fetch_assoc($rows)) {
+                    $result_script =
+                        $row["IsScriptActive"] == 1
+                            ? "check_box"
+                            : "check_box_outline_blank";
+                    echo "<tr>";
+                    echo "<td>" . $row["Name"] . "</td>";
+                    echo "<td><a href='activateScript.php?country=uk&id=" .
+                        $row["Wid"] .
+                        "&value=" .
+                        $row["IsScriptActive"] .
+                        "' id='execute'><span id='executeValue' class='material-icons-sharp'>$result_script</span></a></td>";
+                    echo "</tr>";
+                }
                 ?>
               </tbody>           
             </table>
             <div class="items">
-                <?php  
-                    if (!isset($_GET["filter"])) {
-                        $getQuery = "SELECT COUNT(*) 
+                <?php
+                if (!isset($_GET["filter"])) {
+                    $getQuery = "SELECT COUNT(*) 
                                      FROM Websites 
                                      JOIN Parameters on Websites.Id = Parameters.WebsiteId
                                      WHERE Parameters.buffer_two = 'uk'";
-                    }
-                    
-                    if (isset($_GET["filter"])) {
-                        $filter = $_GET["filter"];
-                        $getQuery = "SELECT COUNT(*) 
+                }
+
+                if (isset($_GET["filter"])) {
+                    $filter = $_GET["filter"];
+                    $getQuery = "SELECT COUNT(*) 
                         FROM Websites 
                         JOIN Parameters on Websites.Id = Parameters.WebsiteId
                         WHERE Parameters.buffer_two = 'uk' AND 
                         Websites.Name LIKE '%$filter%'";
+                }
+
+                $result = mysqli_query($conn, $getQuery);
+                $row = mysqli_fetch_row($result);
+                $total_rows = $row[0];
+                echo "</br>";
+                $total_pages = ceil($total_rows / $limit);
+                $pageURL = "";
+
+                if ($page_number >= 2) {
+                    if (!isset($_GET["filter"])) {
+                        echo "<a href='ukSources.php?page=" .
+                            ($page_number - 1) .
+                            "'>  Prev </a>";
                     }
-                    
-                    $result = mysqli_query($conn, $getQuery);    
-                    $row = mysqli_fetch_row($result);  
-                    $total_rows = $row[0];  
-                    echo "</br>";    
-                    $total_pages = ceil($total_rows / $limit);     
-                    $pageURL = "";     
-                    if($page_number>=2){   
-                        if(!isset($_GET["filter"])){
-                          echo "<a href='ukSources.php?page=".($page_number-1)."'>  Prev </a>";   
-                        }   
-                        
-                        if(isset($_GET["filter"])){
-                          echo "<a href='ukSources.php?page=".($page_number-1)."&filter=".$_GET["filter"]."'>  Prev </a>";  
+
+                    if (isset($_GET["filter"])) {
+                        echo "<a href='ukSources.php?page=" .
+                            ($page_number - 1) .
+                            "&filter=" .
+                            $_GET["filter"] .
+                            "'>  Prev </a>";
+                    }
+                }
+
+                if ($total_pages > 10) {
+                    // Show arrows only when total pages is more than 10
+                    if ($page_number > 1) {
+                        echo "<a href='ukSources.php?adpage=1'> << </a>";
+                        echo "<a href='ukSources.php?adpage=" .
+                            ($page_number - 1) .
+                            "'> < </a>";
+                    }
+
+                    for (
+                        $i = max(1, $page_number - 5);
+                        $i <= min($page_number + 5, $total_pages);
+                        $i++
+                    ) {
+                        if ($i == $page_number) {
+                            echo "<a class='activePage'>$i</a>";
+                        } else {
+                            echo "<a href='ukSources.php?adpage=$i'>$i</a>";
                         }
                     }
-                    for ($i=1; $i<=$total_pages; $i++) {   
-                        if ($i == $page_number) {   
-                            if(!isset($_GET["filter"])){
-                                $pageURL .= "<a class = 'activePage' href='ukSources.php?page=".$i."&filter=".$_GET["filter"]."'>".$i." </a>";   
+
+                    if ($page_number < $total_pages) {
+                        echo "<a href='ukSources.php?adpage=" .
+                            ($page_number + 1) .
+                            "'> > </a>";
+                        echo "<a href='ukSources.php?adpage=$total_pages'> >> </a>";
+                    }
+                } else {
+                    for ($i = 1; $i <= $total_pages; $i++) {
+                        if ($i == $page_number) {
+                            if (!isset($_GET["filter"])) {
+                                $pageURL .=
+                                    "<a class = 'activePage' href='ukSources.php?page=" .
+                                    $i .
+                                    "&filter=" .
+                                    $_GET["filter"] .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
                             }
-                            
-                            
-                            if(isset($_GET["filter"])){
-                                $pageURL .= "<a class = 'activePage' href='ukSources.php?page=".$i."&filter=".$_GET["filter"]."'>".$i." </a>";   
+
+                            if (isset($_GET["filter"])) {
+                                $pageURL .=
+                                    "<a class = 'activePage' href='ukSources.php?page=" .
+                                    $i .
+                                    "&filter=" .
+                                    $_GET["filter"] .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
                             }
                         } else {
-                            if(!isset($_GET["filter"])){
-                              $pageURL .= "<a href='ukSources.php?page=".$i."'>".$i." </a>";   
+                            if (!isset($_GET["filter"])) {
+                                $pageURL .=
+                                    "<a href='ukSources.php?page=" .
+                                    $i .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
                             }
-                            
-                            if(isset($_GET["filter"])){
-                              $pageURL .= "<a href='ukSources.php?page=".$i."&filter=".$_GET["filter"]."'>".$i." </a>";   
+
+                            if (isset($_GET["filter"])) {
+                                $pageURL .=
+                                    "<a href='ukSources.php?page=" .
+                                    $i .
+                                    "&filter=" .
+                                    $_GET["filter"] .
+                                    "'>" .
+                                    $i .
+                                    " </a>";
                             }
                         }
                     }
-                    echo $pageURL;  
-                    if($page_number<$total_pages){   
-                        if(!isset($_GET["filter"])){
-                          echo "<a href='ukSources.php?page=".($page_number+1)."'>  Next </a>";   
-                        }
-                        
-                        
-                         if(isset($_GET["filter"])){
-                          echo "<a href='ukSources.php?page=".($page_number+1)."&filter=".$_GET["filter"]."'>  Next </a>";   
-                        }
+                }
+
+                echo $pageURL;
+                if ($page_number < $total_pages) {
+                    if (!isset($_GET["filter"])) {
+                        echo "<a href='ukSources.php?page=" .
+                            ($page_number + 1) .
+                            "'>  Next </a>";
                     }
+
+                    if (isset($_GET["filter"])) {
+                        echo "<a href='ukSources.php?page=" .
+                            ($page_number + 1) .
+                            "&filter=" .
+                            $_GET["filter"] .
+                            "'>  Next </a>";
+                    }
+                }
                 ?>
             </div>
             <!--<a href="#">Show More</a>-->
@@ -232,7 +312,7 @@
             </div>
             <div class="profile">
               <div class="info">
-                <p>Hey, <b><?php echo $_SESSION['username']; ?></b></p>
+                <p>Hey, <b><?php echo $_SESSION["username"]; ?></b></p>
                 <small class="text-muted">User</small>
               </div>
             </div>
